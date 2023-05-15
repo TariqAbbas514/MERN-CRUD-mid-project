@@ -3,6 +3,21 @@ import React, { useState } from 'react'
 const Post = () => {
 
   const [title, setTitle] = useState([]);
+  const[userData,setUserData] = useState([]);
+
+  const postingData = async(e) =>{
+    e.preventDefault();
+    // console.log(title)
+    let result = await fetch('http://localhost:5000/posts',{
+      method: "POST",
+      body: JSON.stringify({title}),
+      headers:{
+        "Content-Type": "application/json",        
+      }
+    })
+    result = await result.json();
+    console.log(result)
+  }
 
   return (
     <>
@@ -108,25 +123,30 @@ const Post = () => {
             <form className="row g-3">
               <div className="col-md-8">
                 
-                <input type="text" className="form-control" placeholder='todo title of the list one' id="input1" />
+                <input type="text" onChange={(e)=>setTitle(e.target.value)} className="form-control" placeholder='todo title of the list one' id="input1" />
               </div>
               {/* <div className="col-md-4">
               
                 <input type="text" className="form-control"  placeholder='todo description'  id="input2" />
               </div> */}
               <div className="col-md-4">
-                <button type="submit" className="btn btn-primary">ADD</button>
+                <button type="submit" onClick={postingData} to="/post" className="btn btn-primary">ADD</button>
               </div>
             </form>
-
+           { userData.map((post)=>{
+              return(
+                <>
             <div className="card  my-3">
               <div className="card-body">
-                <span className="card-title me-5"><strong>todo title of the list one</strong></span>
+                <span className="card-title me-5"><strong>{post.title}</strong></span>
                 {/* <span className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</span> */}
                 <button type="button" className="btn btn-success float-end order-first">Edit</button>
                 <button type="button" className="btn btn-danger float-end me-2  order-last">Delete</button>
               </div>
             </div>
+            </>
+              )
+})}
           </div>
         </div>
       </div>
